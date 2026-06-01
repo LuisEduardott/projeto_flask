@@ -22,4 +22,4 @@ if __name__ == '__main__':
     # debug = true significa: atualiza automaticamente quando salvamos
     # host = '0.0.0.0' permite acesso na rede local (opcional)
     # port=5000 é a porta padrao do flask
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.ruSn(debug=True, host='0.0.0.0', port=5000)
