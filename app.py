@@ -1,25 +1,36 @@
-# Import o Flask
-from flask import Flask, render_template
+import curses
+from selectors import SelectSelector
 
-# Cria a aplicação Flask - isso monta o site
+from flask import Flask, render_template, request
+
 app = Flask(__name__)
 
-# rota - define o que acontece quando alguém acessa o site
-# 0 '/' significa a página principal do site (ex: https://localhost:5000/)
-@app.route('/')
-def pagina_inicial():
-    # criação de variaveis para enviar ao HTML
-    texto_para_html = "Esta mensagem veio do python!"
-    minha_lista = [ "Maça","Banana","mimosa","Laranja"]
-    # render templates procura o arquivo dentro da pasta template
-    # os parametros apos a virgula sao enviado parao HTML
+@app.route('formulario')
+def exibir_formulario():
+    return render_template("formulario.html",resultado="Aguandando o envio...")
 
-    return render_template('index.html', mensagem=texto_para_html, lista_exemplo=minha_lista)
+@app.route('/processar', methods=['POST'])
+def processar_formulario():
 
-# este bloco só escuta se rodarmos esse arquivo diretamente
-#
-if __name__ == '__main__':
-    # debug = true significa: atualiza automaticamente quando salvamos
-    # host = '0.0.0.0' permite acesso na rede local (opcional)
-    # port=5000 é a porta padrao do flask
-    app.ruSn(debug=True, host='0.0.0.0', port=5000)
+    nome = request.form['nome']
+    idade = int(request.form['idade'])
+    curso = request.form['curso']
+
+    if not nome or not idade or not curso:
+        mensagem_resultado = "Erro: Todos os campos são obrigatórios!"
+    else:
+        idade_int = int(idade)
+        mensagem_base = f"Olá{nome},você tem {idade} anos e está no curso de [{curso}]!"
+    if idade_int < 18:
+        mensagem_resultado = "Você é menor de idade"
+    elif idade_int > 18 and idade_int < 60:
+        mensagem_idade = "Você é adulto."
+    else:
+        mensagem_idade = "Você é experiente."
+
+    if curso == "Python":
+        mensagem_curso = "Ótima escolha,você é versátil!"
+    elif curso == "Flask":
+        mensagem_curso = "Excelente escolha gafanhoto!"
+    elif curso == "HTML/CSS":
+        mensagem_curso = "Fundamental pequenino gafanhoto!"
